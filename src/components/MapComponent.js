@@ -4,7 +4,6 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 const styles = {
   width: "100vw",
-  // height: "calc(100vh - 80px)",
   height: "100vh",
   position: "absolute",
 };
@@ -51,6 +50,10 @@ const MapComponent = () => {
           zoom: map.getZoom().toFixed(2),
         });
       });
+
+      var marker = new mapboxgl.Marker()
+        .setLngLat([location.lng, location.lat])
+        .addTo(map);
     };
 
     if (!map) initializeMap({ setMap, mapContainer });
