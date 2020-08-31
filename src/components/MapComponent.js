@@ -18,8 +18,7 @@ const MapComponent = () => {
   const mapContainer = useRef(null);
 
   useEffect(() => {
-    mapboxgl.accessToken =
-      "pk.eyJ1IjoiZ3JlYXRuZXNzMTg3IiwiYSI6ImNrZWh4NWt1ZDE5cnkzMHM1OHBnZXRsdTMifQ.GWzxEKlT0aMWTLRNeBc-ow";
+    mapboxgl.accessToken = "";
     const initializeMap = ({ setMap, mapContainer }) => {
       const map = new mapboxgl.Map({
         container: mapContainer.current,
@@ -40,6 +39,7 @@ const MapComponent = () => {
             enableHighAccuracy: true,
           },
           trackUserLocation: true,
+          showUserLocation: true,
         })
       );
 
