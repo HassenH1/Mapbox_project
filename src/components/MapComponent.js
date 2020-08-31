@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
 const styles = {
   width: "100vw",
@@ -14,6 +16,10 @@ const MapComponent = () => {
     lng: -96,
     lat: 37.8,
     zoom: 4,
+  });
+  const [userLocation, setUserLocation] = useState({
+    lng: "",
+    lat: "",
   });
   const mapContainer = useRef(null);
 
@@ -33,15 +39,26 @@ const MapComponent = () => {
       });
 
       // Add geolocate control to the map.
-      map.addControl(
-        new mapboxgl.GeolocateControl({
-          positionOptions: {
-            enableHighAccuracy: true,
-          },
-          trackUserLocation: true,
-          showUserLocation: true,
-        })
-      );
+      var geoLocate = new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+        showUserLocation: true,
+        showAccuracyCircle: true,
+      });
+
+      map.addControl(geoLocate);
+
+      geoLocate.on("geolocate", (e) => {
+        var lng = e.coords.longitude;
+        var lat = e.coords.latitude;
+        setUserLocation({
+          lng,
+          lat,
+        });
+        console.log(lng, lat, "M------------my position");
+      });
 
       map.on("move", () => {
         setLocation({
@@ -51,9 +68,23 @@ const MapComponent = () => {
         });
       });
 
-      var marker = new mapboxgl.Marker()
-        .setLngLat([location.lng, location.lat])
-        .addTo(map);
+      //   var marker = new mapboxgl.Marker()
+      //     .setLngLat([location.lng, location.lat])
+      //     .addTo(map);
+
+      var geocoder = new MapboxGeocoder({
+        // Initialize the geocoder
+        accessToken: mapboxgl.accessToken, // Set the access token
+        mapboxgl: mapboxgl, // Set the mapbox-gl instance
+        marker: true, // Do not use the default marker style
+        proximity: {
+          latitude: userLocation.lat,
+          longitude: userLocation.lng,
+        },
+      });
+
+      // Add the geocoder to the map
+      map.addControl(geocoder);
     };
 
     if (!map) initializeMap({ setMap, mapContainer });
