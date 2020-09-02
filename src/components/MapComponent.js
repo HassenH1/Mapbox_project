@@ -3,8 +3,8 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
-// import MapboxDirections from "@mapbox/mapbox-gl-directions";
-import Directions from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions";
+import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions";
+import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
 
 const styles = {
   width: "100vw",
@@ -50,8 +50,6 @@ const MapComponent = () => {
         showAccuracyCircle: true,
       });
 
-      map.addControl(geoLocate);
-
       geoLocate.on("geolocate", (e) => {
         var lng = e.coords.longitude;
         var lat = e.coords.latitude;
@@ -85,13 +83,14 @@ const MapComponent = () => {
         },
       });
 
-      var direction = new Directions({
+      var direction = new MapboxDirections({
         accessToken: mapboxgl.accessToken,
       });
 
       // Add the geocoder to the map
       map.addControl(geocoder);
-      mao.addControl(direction, "top-left");
+      map.addControl(geoLocate);
+      map.addControl(direction, "top-left");
     };
 
     if (!map) initializeMap({ setMap, mapContainer });
