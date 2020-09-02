@@ -3,6 +3,8 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+// import MapboxDirections from "@mapbox/mapbox-gl-directions";
+import Directions from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions";
 
 const styles = {
   width: "100vw",
@@ -83,8 +85,13 @@ const MapComponent = () => {
         },
       });
 
+      var direction = new Directions({
+        accessToken: mapboxgl.accessToken,
+      });
+
       // Add the geocoder to the map
       map.addControl(geocoder);
+      mao.addControl(direction, "top-left");
     };
 
     if (!map) initializeMap({ setMap, mapContainer });
